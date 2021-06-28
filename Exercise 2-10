@@ -1,0 +1,25 @@
+#include <stdio.h>
+#define BUFLEN 45
+
+int lower(int x);
+
+int main(int argc, char** argv)
+{
+  int arr[BUFLEN], i;
+  
+  for (i = 0; i < BUFLEN; i++)
+  {
+    arr[i] = i % ('Z' - 'A' + 1) + 'A';
+  }
+  for (i = 0; i < BUFLEN; i++)
+  {
+    printf("%-6c%c", lower(arr[i]), (i % 10 == 9 || i == BUFLEN - 1) ? '\n' : ' ');
+  }
+  return 0;
+}
+
+int lower(int c)
+{
+  return c >= 'A' && c <= 'Z' ? c | 32 : c;
+}
+
