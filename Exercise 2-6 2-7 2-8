@@ -1,0 +1,72 @@
+#include <stdio.h>
+
+unsigned getbits(unsigned x, int p, int n);
+unsigned setbits(unsigned x, int p, int n, int y);
+unsigned invert(unsigned x, int p, int n);
+int wordlength(void);
+unsigned rightrot(unsigned x, int n);
+unsigned rightrot2(unsigned x, int n);
+
+int main(int argc, char** argv)
+{
+  int x, y;
+
+  x = 0x56;
+  y = getbits(x, 4, 4);
+  y = invert(x, 4, 4);
+  y = rightrot(x, 4);
+  y = rightrot2(x, 36);
+
+  return 0;
+}
+
+unsigned getbits(unsigned x, int p, int n)
+{
+  return (x >> (p + 1 - n))&~(~0 << n);
+};
+
+unsigned setbits(unsigned x, int p, int n, int y)
+{
+  return x & ~(~(~0 << n) << (p + 1 - n)) | // << (p + 1 - n) unset the num of 0 from right to left
+   (y & ~(~0 << n)) << (p + 1 - n);
+};
+
+
+unsigned invert(unsigned x, int p, int n)
+{
+  return x ^ (~(~0 << n) << (p + 1 - n));
+}
+
+int wordlength(void)
+{
+  int i;
+  unsigned v;
+
+  v = (unsigned)~0;
+  for (i = 1; (v = v >> 1) > 0; i++)
+    ;
+  return i;
+}
+
+unsigned rightrot(unsigned x, int n)
+{
+  unsigned tmp;
+  while (n--)
+  {
+    tmp = (x & ~(~0 << 1)) << (wordlength() - 1);
+    // tmp = (x & 1) << (wordlength() - 1); 
+    x >>= 1;
+    x |= tmp;
+  }
+  return x;
+}
+
+unsigned rightrot2(unsigned x, int n)
+{
+  unsigned tmp;
+
+  tmp = x & ~(~0 << n);
+  x >>= n;
+  x |= tmp << (wordlength() - n);
+  return x;
+}
